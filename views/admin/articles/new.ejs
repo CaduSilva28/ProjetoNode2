@@ -1,0 +1,42 @@
+<%-include('../../partials/header.ejs')%>
+    <body>
+        <%-include('../../partials/navbar.ejs')%>
+        <section class="container">
+            <hr>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Novo artigo</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/articles/save">
+                        <label for="">Categoria</label>
+                        <select class="form-select" id="categoryId" name="categoryId" required>
+                            <option></option>
+                            <%categories.forEach(category => {%>
+                            <option value="<%=category.id%>"><%=category.title%></option>
+                            <%})%>
+                        </select>
+                        <br>
+                        <input class="form-control" type="text" id="title" name="title" placeholder="Título do artigo" required>
+                        <br>
+                        <textarea class="form-control" id="body" name="body" placeholder="Descreva o artigo aqui"></textarea>
+                        <br>
+                        <button class="btn btn-success" type="submit">Cadastrar</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </body>
+<%-include('../../partials/footer.ejs')%>
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+      language: 'pt_BR',//A linguagem
+      selector: "#body",//Qual o textarea
+      plugins: "advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons",
+      menubar: false, //para remover o header
+      toolbar: "formatselect | bold italic underline | fontsize | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | preview",
+      //branding: false,
+      statusbar: false //para remover o footer
+    });
+</script>
