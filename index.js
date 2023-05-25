@@ -4,6 +4,7 @@ require("dotenv").config({path: "./config/homolog.env"});
 const port = process.env.PORT;
 const categoriesController = require("./categories/categoriesController");
 const articlesController = require("./articles/articlesController");
+const usersController = require("./users/UserController");
 
 const bodyParser = require("body-parser");
 
@@ -20,6 +21,7 @@ connection
 
 const Article = require("./articles/Article");
 const Category = require("./categories/Category");
+const User = require("./users/User");
 
 //================= Renderizador =====================//
 app.set('view engine','ejs');
@@ -31,7 +33,7 @@ app.use(bodyParser.json());
 //================= Rotas =====================//
 app.use("/", categoriesController);
 app.use("/", articlesController);
-
+app.use("/", usersController);
 //Rota inicial
 app.get("/", (req,res) => {
     Article.findAll({
