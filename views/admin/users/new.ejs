@@ -1,0 +1,24 @@
+<%-include('../../partials/header.ejs')%>
+    <body>
+        <%-include('../../partials/homenavbar.ejs')%>
+        <section class="container" id="container-users-new">
+            <br><br><br>
+            <hr>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Criar conta</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/users/create"> 
+                        <label>E-mail</label>
+                        <input class="form-control" type="email" name="email" placeholder="email@exemplo.com" required>
+                        <label>Senha</label>
+                        <input class="form-control" type="password" name="password" placeholder="**********"required>
+                        <br>
+                        <button class="btn btn-dark w-100" type="submit">Criar</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </body>
+<%-include('../../partials/footer.ejs')%>

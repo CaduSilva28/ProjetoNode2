@@ -1,142 +1,167 @@
+require("dotenv").config({ path: "./config/homolog.env"});
+const limit = parseInt(process.env.LIMIT_PAGE);
+
 const express = require("express");
 const router = express.Router();
+const slugify = require("slugify");
 const Article = require("./Article");
 const Category = require("../categories/Category");
-const slugify = require("slugify");
-require("dotenv").config({path: "./config/homolog.env"});
-const limit = parseInt(process.env.LIMIT);
+const adminAuth = require("../middlewares/adminAuth");
+const sessionFun = require("../services/sessionFun");
 
-//Rota para criar artigo
-router.get("/admin/articles/new",(req,res) => {
+//Rota para criação de artigo
+router.get("/admin/articles/new/:deExists?", adminAuth, (req, res) => {
+    let deExists = req.params.deExists || false;
+
+    if(deExists === "true"){
+        deExists = deExists === "true";
+    }
+
     Category.findAll({
         raw: true,
         order: [
             ['title','ASC']
         ]
-    }).then(categories => {
+    }).then(categories =>  {
         res.render("admin/articles/new",{
-            categories
+            categories,
+            deExists
         });
     }).catch(msgError => {
-        console.log("Failed to query articles: " + msgError);
+        console.log("Failed to query categories to database: " + msgError);
+        res.redirect("/");
     });
 });
 
-//Rota que o artigo será salvo
-router.post("/articles/save", (req,res) => {
-    const { title, body, categoryId } = req.body;
-
-    Article.create({
-        title: title,
-        slug: slugify(title),
-        body: body,
-        categoryId: categoryId
-    }).then(() => {
-        res.redirect("/admin/articles");
-    }).catch((msgError) => {
+//Rota em que o artigo será salvo
+router.post("/articles/save", adminAuth, (req, res) => {
+    const { categoryId, title, body } = req.body;
+    console.log("veio aqui 1")
+    Article.findOne({
+        where: { title: title}
+    }).then(article => {
+        if(!article){
+            Article.create({
+                categoryId: categoryId,
+                title: title,
+                slug: slugify(title),
+                body: body
+            }).then(() => {
+                res.redirect("/");
+            }).catch((msgError) => {
+                console.log("Failed to create article to database: " + msgError);
+                res.redirect("/admin/articles/new");
+            });
+        }else{
+            console.log("Failed to create article to database: because article already exists");
+            res.redirect("/admin/articles/new/true");
+        }
+    }).catch(msgError => {
         console.log("Failed to create article to database: " + msgError);
         res.redirect("/admin/articles/new");
     });
 });
 
-//route to list the articles
-router.get("/admin/articles", (req, res) => {
+//Rota que listará os artigos
+router.get("/admin/articles", adminAuth, (req, res) => {
     
     Article.findAll({
         order: [
             ['id','ASC']
         ],
         include: [{
-            model: Category, required: true
+            model: Category,
+            required: true
         }]
     }).then(articles => {
         res.render("admin/articles/index",{
-            articles    
+            articles
         });
     }).catch(msgError => {
-        console.log("Failed to list articles: " + msgError);
+        console.log("Failed to query articles to database: " + msgError);
         res.redirect("/");
     });
 });
 
 //Rota que irá deletar o artigo
-router.post("/articles/delete",(req, res) => {
+router.post("/articles/delete", adminAuth, (req, res) => {
     const { id } = req.body;
 
     if(id && !isNaN(id)){
         Article.destroy({
-            where: {id: id}
+            where: { id: id }
         }).then(() => {
             res.redirect("/admin/articles");
         }).catch((msgError) => {
-            console.log("Failed to delete article: " + msgError);
+            console.log("Failed to delete article to database: " +  msgError);
             res.redirect("/admin/articles");
-        });
+        })
     }else{
-        console.log("Failed to delete article: because id is not valid");
+        console.log("Failed to delete article to database: because id is not valid");
         res.redirect("/admin/articles");
     }
 });
 
-//Rota para editar o artigo
-router.get("/admin/articles/edit/:id",(req, res) => {
+//Rota para editar artigo
+router.get("/admin/articles/edit/:id", adminAuth, (req, res) => {
     const { id } = req.params;
 
     if(id && !isNaN(id)){
         Article.findOne({
-            where: {id: id},
-            include: [{
-                model: Category
-            }]
+            where: { id: id }
         }).then(article => {
-            Category.findAll({
-                raw: true,
-                order: [
-                    ['title','ASC']
-                ]
-            }).then(categories => {
-                res.render("admin/articles/edit",{
-                    article,
-                    categories
+            if(article){
+                Category.findAll({
+                    raw: true,
+                    order: [
+                        ['title','ASC']
+                    ]
+                }).then(categories => {
+                    res.render("admin/articles/edit",{
+                        article,
+                        categories
+                    });
+                }).catch(msgError => {
+                    console.log("Failed to query categories to database: " + msgError);
+                    res.redirect("/");
                 });
-            }).catch(msgError => {
+            }else{
+                console.log("Failed to query article to database: because article does not exists");
                 res.redirect("/");
-                console.log("Failed to query categories: " + msgError);
-            })
+            }
         }).catch(msgError => {
+            console.log("Failed to query article to database: " + msgError);
             res.redirect("/");
-            console.log("Failed to edit article: " + msgError);
         })
     }else{
+        console.log("Failed to query article: because id is not valid");
         res.redirect("/");
-        console.log("Failed to edit article: because id is not valid");
     }
 });
 
 //Rota para atualizar o artigo
-router.post("/articles/update", (req, res) => {
+router.post("/articles/update", adminAuth, (req, res) => {
     const { categoryId, title, body, id } = req.body;
 
     Article.update({
         categoryId: categoryId,
         title: title,
         slug: slugify(title),
-        body: body
-    },
-    {
-        where: {id :id}
+        body: body,
+    },{
+        where: { id: id}
     }).then(() => {
         res.redirect("/admin/articles");
     }).catch((msgError) => {
-        console.log("Failed to update article to database: " + msgError);
+        console.log("Failed to update articles to database: " + msgError);
         res.redirect("/admin/articles/edit/" + id);
     });
 });
 
-//A partir daqui
+//Rota de paginação de artigos
 router.get("/articles/page/:num", (req, res) => {
     const page = req.params.num;
-    let offset = 0;
+    let offset = 0
 
     if(!isNaN(page) && page > 1){
         offset = (parseInt(page) - 1) * limit;
@@ -148,33 +173,36 @@ router.get("/articles/page/:num", (req, res) => {
         order: [
             ['id','DESC']
         ]
-    })
-    .then(articles => {
+    }).then(articles => {
         let next = true;
 
-        if(offset + limit >=articles.count){
+        if(offset + limit >= articles.count){
             next = false
         }
 
         const result = {
+            next,
             page: parseInt(page),
-            articles,
-            next
+            articles
         }
+
         Category.findAll({
             raw: true,
             order: [
-                ['id','ASC']
+                ['title','ASC']
             ]
         }).then(categories => {
             res.render("admin/articles/page",{
                 categories,
-                result
-            })
+                result,
+                hasSession: sessionFun(req, res)
+            });
         }).catch(msgError => {
-            console.log("Failed to query categories to database: " + msgError);
-            res.redirect("/");
+
         });
+    }).catch(msgError => {
+        console.log("Failed to query articles to database: " + msgError);
+        res.redirect("/");
     });
 });
 

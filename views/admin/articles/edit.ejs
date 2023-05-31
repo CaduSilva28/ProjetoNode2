@@ -5,27 +5,35 @@
             <hr>
             <div class="card">
                 <div class="card-header">
-                    <h4>Novo artigo</h4>
+                    <h5>Edição de artigo</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="/articles/update">
-                        <label>Categoria</label>
-                        <select class="form-select" id="categoryId" name="categoryId" required>
-                            <%categories.forEach(category => {%>
-                                <%if(category.id === article.category.id){%>
-                                    <option value="<%=category.id%>" selected><%=category.title;%></option>
-                                <%} else{%> 
-                                    <option value="<%=category.id%>"><%=category.title;%></option>
-                                <%}%>
-                            <%});%> 
-                        </select>
-                        <br>
-                        <input class="form-control" type="text" id="title" name="title" value="<%=article.title%>" placeholder="Título do artigo" required>
-                        <br>
-                        <textarea class="form-control" id="body" name="body"><%-article.body%></textarea>
-                        <br>
-                        <input type="hidden" id="id" name="id" value="<%=article.id%>">
-                        <button class="btn btn-success" type="submit">Atualizar</button>
+                    <form method="post" action="/articles/update" class="row">
+                        <div class="col-sm-5">
+                            <label for="categoryId">Categoria</label>
+                            <select class="form-select" id="categoryId" name="categoryId" required>
+                                <%categories.forEach(category => {%>
+                                    <%if(article.categoryId === category.id){%>
+                                        <option value="<%=category.id%>" selected><%=category.title%></option>
+                                    <%}else{%>
+                                        <option value="<%=category.id%>"><%=category.title%></option>
+                                    <%}%>
+                                <%})%>
+                            </select>
+                        </div>
+                        <div class="col-sm-7">
+                            <label for="title">Título do artigo</label>
+                            <input class="form-control" id="title" name="title" placeholder="Título do artigo" value="<%=article.title%>" required>
+                        </div>
+                        <div class="col-sm-12">
+                            <br>
+                            <textarea class="form-control" id="body" name="body"><%-article.body%></textarea>
+                            <br>
+                        </div>
+                        <input type="hidden" name="id" value="<%=article.id%>">
+                        <div class="col-sm-1">
+                            <button class="btn btn-dark" type="submit">Atualizar</button>
+                        </div>
                     </form>
                 </div>
             </div>

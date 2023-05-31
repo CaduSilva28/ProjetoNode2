@@ -1,10 +1,31 @@
-<header class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="/">GuiaPress</a>
-    <ul class="navbar-nav me-auto">
+<div class="div-header">
+    <a href="/" class="header-link">
+        <h1>DEVPRESS</h1>
+    </a>
+    <%if(!hasSession){%>
+        <div class="header-icons">
+            <a class="header-icon" href="/admin/users/create">
+                <img class="img-icone" src="/img/create.png" alt="Create">
+            </a>
+            <a class="header-icon" href="/login">
+                <img class="img-icone" src="/img/login.png" alt="Login">
+            </a>
+        </div>
+    <%}else {%>
+        <div class="header-icons">
+            <a class="header-icon" href="/admin/articles">
+                <img class="img-icone" src="/img/config.png" alt="Create">
+            </a>
+        </div>
+    <%}%>
+</div>
+
+<header class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <ul class="navbar-nav me-auto" style="margin: 0 auto;"> <!-- Adicionada a classe justify-content-center -->
         <%categories.forEach(category => {%>
-        <li class="nav-item">
-            <a class="nav-link" href="/category/<%=category.slug%>"><%=category.title%></a>
-        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/category/<%=category.slug%>" style="color: #fff; font-weight: 500;"><%=category.title%></a>
+            </li>
         <%});%>
     </ul>
 </header>

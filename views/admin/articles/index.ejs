@@ -1,37 +1,33 @@
 <%-include('../../partials/header.ejs')%>
     <body>
         <%-include('../../partials/navbar.ejs')%>
-        <section class="container">
+        <section class="container" id="container-article-index">
             <hr>
-            <h4>Artigos</h4>
-            <a class="btn btn-success" href="/admin/articles/new">Criar novo artigo</a>
+            <h5 class="h5-index">Artigos</h5>
+            <a class="btn btn-dark" href="/admin/articles/new">Criar artigo</a>
             <hr>
-            <table class="table table-bordered">
+            <table class="table" id="table-article-index">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Título</th>
-                        <th>Slug</th>
-                        <th>Category</th>
-                        <th>Ações</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Categoria</th>
+                        <th scope="col">Ação</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <%articles.forEach(article => {%>  
+                    <%articles.forEach(article => {%>
                     <tr>
-                        <td><%=article.id;%></td>
-                        <td><%=article.title;%></td>
-                        <td><%=article.slug;%></td>
-                        <td><%=article.category.title%></td>
-                        <td>
-                            <a class="btn btn-warning" href="/admin/articles/edit/<%=article.id%>">Editar</a>
-                            <form method="post" action="/articles/delete" style="display: inline" onsubmit="confirmDel(event,this)">
+                        <td scope="col"><%=article.title;%></td>
+                        <td scope="col"><%=article.category.title%></td>
+                        <td scope="col">
+                            <a class="btn btn-success" href="/admin/articles/edit/<%=article.id%>">Editar</a>
+                            <form method="post" action="/articles/delete" onsubmit="confirmDel(event,this)">
                                 <input type="hidden" id="id" name="id" value="<%=article.id%>">
-                                <button class="btn btn-danger" type="submit">Deletar</button>
+                                <button class="btn btn-danger" href="submit">Deletar</button>
                             </form>
                         </td>
                     </tr>
-                    <%})%>
+                    <%});%>
                 </tbody>
             </table>
         </section>
@@ -40,10 +36,10 @@
 <script>
     function confirmDel(event, form){
         event.preventDefault();
-        const decision = confirm("Deseja deletar esta categoria?");
+        const decision = confirm("Deseja deletar este artigo?");
 
         if(decision){
             form.submit();
         }
-    }
+    };
 </script>

@@ -1,35 +1,33 @@
 <%-include('../../partials/header.ejs')%>
-    <body>
+    <body background="img/imagem-fundo.png">
         <%-include('../../partials/navbar.ejs')%>
-        <section class="container">
+        <section class="container" id="container-category-index">
             <hr>
-            <h4>Categorias</h4>
-            <a class="btn btn-success" href="/admin/categories/new">Criar nova categoria</a>
+            <h5 class="h5-index">CATEGORIAS</h5>
+            <a class="btn btn-dark" href="/admin/categories/new">Criar categoria</a>
             <hr>
-            <table class="table table-bordered">
+            <table class="table" id="table-category-index">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Título</th>
-                        <th>Slug</th>
-                        <th>Ações</th>
+                        <th scope="col">Titulo</th>
+                        <th scope="col">Slug</th>
+                        <th scope="col">Ação</th>
                     </tr>
                 </thead>
                 <tbody>
                     <%categories.forEach(category => {%>
                     <tr>
-                        <td><%=category.id;%></td>
-                        <td><%=category.title;%></td>
-                        <td><%=category.slug;%></td>
-                        <td>
-                            <a class="btn btn-warning" href="/admin/categories/edit/<%=category.id%>">Editar</a>
-                            <form method="post" action="/categories/delete" style="display: inline" onsubmit="confirmDel(event,this)">
+                        <td scope="col"><%=category.title;%></td>
+                        <td scope="col"><%=category.slug;%></td>
+                        <td scope="col">
+                            <a class="btn btn-success" href="/admin/categories/edit/<%=category.id%>">Editar</a>
+                            <form method="post" action="/categories/delete" onsubmit="confirmDel(event,this)">
                                 <input type="hidden" id="id" name="id" value="<%=category.id%>">
                                 <button class="btn btn-danger" type="submit">Deletar</button>
                             </form>
                         </td>
                     </tr>
-                    <%});%>
+                    <%})%>
                 </tbody>
             </table>
         </section>
@@ -39,9 +37,9 @@
     function confirmDel(event,form){
         event.preventDefault();
         const decision = confirm("Deseja deletar esta categoria?");
-        
+
         if(decision){
-           form.submit();
-        }
-    };
+            form.submit();
+        };
+    }
 </script>

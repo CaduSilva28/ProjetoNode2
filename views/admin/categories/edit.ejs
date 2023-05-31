@@ -1,18 +1,18 @@
 <%-include('../../partials/header.ejs')%>
     <body>
         <%-include('../../partials/navbar.ejs')%>
-        <section class="container">
+        <section class="container" id="container-category-edit">
             <hr>
             <div class="card">
                 <div class="card-header">
-                    <h4>Edição de categoria</h4>
+                    <h5>Edição de categoria</h5>
                 </div>
                 <div class="card-body">
                     <form method="post" action="/categories/update">
                         <input type="hidden" id="id" name="id" value="<%=category.id%>">
-                        <input class="form-control" type="text" id="title" name="title" value="<%=category.title%>" placeholder="" required>
+                        <input class="form-control" type="text" id="title" name="title" placeholder="Título da categoria" value="<%=category.title%>" required>
                         <br>
-                        <button class="btn btn-success" type="submit">Atualizar</button>
+                        <button class="btn btn-dark">Atualizar</button>
                     </form>
                 </div>
             </div>

@@ -1,25 +1,26 @@
 <%-include('partials/header.ejs')%>
     <body>
-        <%-include('partials/homenavbar.ejs')%>
-        <section class="container-sm">
+        <%-include('partials/homenavbar.ejs')%> 
+        <section class="container" id="container-index">
+            <hr>
+            <h3>BEM-VINDO AO DEVPRESS ARTIGOS</h3>
             <hr>
             <%articles.forEach(article => {%>
-            <div class="card">
+            <div class="card"> 
                 <div class="card-header">
                     <h5><%=article.title%></h5>
                 </div>
                 <div class="card-body">
-                    <a class="btn btn-success" href="/<%=article.slug%>">Ler artigo</a>
+                    <a class="btn btn-dark" href="/<%=article.slug%>">Ler artigo</a>
                 </div>
             </div>
             <br>
-            <%});%>
+            <%})%>
             <div class="row">
                 <div class="col col-12">
-                    <a style="float: right; text-decoration: none;" href="/articles/page/2">Próximo>>></a>
+                    <a class="link-page-next" href="/articles/page/2">Próximo>>></a>
                 </div>
             </div>
-        </section>
+        </section> 
     </body>
 <%-include('partials/footer.ejs')%>
-    

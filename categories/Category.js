@@ -8,7 +8,7 @@ const Category = connection.define('categories',{
     },
     slug:{
         type: Sequelize.STRING,
-        allowNull:false
+        allowNull: false
     }
 });
 

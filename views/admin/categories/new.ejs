@@ -1,17 +1,21 @@
 <%-include('../../partials/header.ejs')%>
     <body>
         <%-include('../../partials/navbar.ejs')%>
-        <section class="container">
+        <section class ="container" id="container-category-new">
             <hr>
             <div class="card">
                 <div class="card-header">
-                    <h4>Cadastro de categoria</h4>
+                    <h5>Nova categoria</h5>
                 </div>
                 <div class="card-body">
                     <form method="post" action="/categories/save">
                         <input class="form-control" type="text" id="title" name="title" placeholder="Título da categoria" required>
+                        <% if (typeof deExists !== 'undefined' && deExists === true) { %>
+                            <label class="msgError">Esta categoria já existe</label>
+                            <br>
+                        <% } %>
                         <br>
-                        <button class="btn btn-success" type="submit">Cadastrar</button>
+                        <button class="btn btn-dark" type="submit">Cadastrar</button>
                     </form>
                 </div>
             </div>

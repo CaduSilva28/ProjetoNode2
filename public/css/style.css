@@ -1,11 +1,142 @@
-#container-users{
-    max-width: 450px; /* Defina a largura máxima desejada para o container */
+body {
+    background-image: url("../img/fundo2.jpg");
+    background-size: cover;
+}
+h3{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 550;
+    color: #FFF;
+}
+h5{
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 550;
+}
+#container-category-new{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#container-category-index{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#container-category-edit{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#container-article-index{
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.msgError{
+    color: #ff0000;
+}
+form{
+    display: inline
+}
+#table-category-index{
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: #fff;
+}
+.h5-index{
+    color: #fff;
+}
+#table-article-index{
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: #fff;
+}
+.card{
+    background-color: #D3D3D3;
+}
+#container-index{
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto; 
+}
+.link-page-next{
+    float: right; 
+    text-decoration: none; 
+    color: #FFF
+}
+.link-page-before{
+    float: left; 
+    text-decoration: none; 
+    color: #FFF
+}
+
+#container-users-new, #container-users-login{
+    max-width: 400px;
     margin-left: auto;
     margin-right: auto;
 }
 
 #container-list-user{
-    max-width: 500px; /* Defina a largura máxima desejada para o container */
+    max-width: 400px;
     margin-left: auto;
     margin-right: auto;
+}
+
+#table-user-index{
+    background-color: rgba(0, 0, 0, 0.5); 
+    color: #fff;
+}
+
+a{
+    text-decoration: none;
+}
+
+h1{
+    color: #FFF;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 550;
+}
+
+a:hover{
+    color: #C3C3C3;
+    font-weight: 550;
+}
+
+a h1:hover{
+    color: #C3C3C3;
+    font-weight: 550;
+}
+
+.div-header {
+    display: flex;
+    align-items: center;
+}
+
+.header-link {
+    display: flex;
+    align-items: center;
+}
+
+.header-icons {
+    margin-left: auto;
+}
+
+.header-icon {
+    margin-left: 10px;
+}
+
+.img-icone {
+    width: 40px;
+    margin-right: 10px;
+    filter: invert(100%);
+}
+.a-create-user{
+    color: #000;
+}
+
+.a-create-user:hover {
+    color: #666262;
+}
+
+h2{
+    text-align: center;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 550;
 }

@@ -1,111 +1,120 @@
 const express = require("express");
 const router = express.Router();
-const Category = require("./Category");
 const slugify = require("slugify");
+const Category = require("./Category");
+const adminAuth = require("../middlewares/adminAuth");
 
-//Rota para criar categoria
-router.get("/admin/categories/new", (req,res) => {
+//Rota para listar categorias
+router.get("/admin/categories/new", (req, res) => {
     res.render("admin/categories/new");
 });
 
-//Rota em que a categoria será salva
-router.post("/categories/save",(req,res) => {
+//Rota para salvar categoria no banco de dados
+router.post("/categories/save", adminAuth, (req, res) => {
     const { title } = req.body;
 
-    Category.create({
-        title: title,
-        slug: slugify(title)
-    }).then(() => {
-        res.redirect("/admin/categories");
-    }).catch((msgError) => {
-        console.log("Failed to save category to database: " + msgError);
+    Category.findOne({
+        where: {title: title}
+    }).then(category => {
+        if(!category){
+            Category.create({
+                title: title,
+                slug: slugify(title)
+            }).then(() => {
+                res.redirect("/");
+            }).catch((msgError) => {
+                console.log("Failed to save category to database: " + msgError);
+                res.redirect("/admin/categories/new");
+            });
+        }else{
+            console.log("Failed to create category to database: because category already esxists");
+            res.render("admin/categories/new",{
+                deExists: true
+            });
+        }
+    }).catch(msgError => {
+        console.log("Failed to query category to database: " + msgError);
         res.redirect("/admin/categories/new");
     });
 });
 
-//Rota que listará as categorias
-router.get("/admin/categories", (req, res) => {
+//Rota que irá listar as categorias
+router.get("/admin/categories", adminAuth, (req, res) => {
     
     Category.findAll({
         raw: true,
         order: [
-            ['id','ASC']
+            ['id','DESC']
         ]
     }).then(categories => {
         res.render("admin/categories/index",{
             categories
-        });
+        })
     }).catch(msgError => {
-        console.log("Failed to view category to database: " + msgError);
-        res.redirect("/");
-    })
+        console.log("Failed to query categories to database: " + msgError);
+    });
 });
 
 //Rota que irá deletar a categoria
-router.post("/categories/delete", (req, res) => {
+router.post("/categories/delete", adminAuth, (req, res) => {
     const { id } = req.body;
-
+    
     if(id && !isNaN(id)){
         Category.destroy({
             where: {id: id}
         }).then(() => {
             res.redirect("/admin/categories");
-        }).catch((msgError) => {
+        }).catch(msgError => {
             console.log("Failed to delete category to database: " + msgError);
             res.redirect("/admin/categories");
         });
     }else{
         console.log("Failed to delete category to database: because id is not valid");
+        res.redirect("/admin/categories");
     }
 });
 
 //Rota para editar categoria
-router.get("/admin/categories/edit/:id", (req,res) => {
+router.get("/admin/categories/edit/:id", adminAuth, (req, res) => {
     const { id } = req.params;
 
     if(id && !isNaN(id)){
-        Category.findByPk(
-                id
-            ).then(category => {
+        Category.findOne({
+            raw: true,
+            where: {id: id}
+        }).then(category => {
             if(category){
                 res.render("admin/categories/edit",{
                     category
-                });
+                })
             }else{
-                console.log("Failed to edit category: because id is not found");
+                console.log("Failed to query category to database: because category is not found");
                 res.redirect("/");
             }
         }).catch(msgError => {
-            console.log("Failed to edit category: " + msgError);
+            console.log("Failed to query category: " + msgError);
             res.redirect("/");
-        })
+        });
     }else{
-        console.log("Failed to edit category: because id is not valid");
+        console.log("Failed to query category: because id is not valid");
         res.redirect("/");
     }
 });
 
-//Rota para atualizar a categoria
-router.post("/categories/update",(req,res) => {
+router.post("/categories/update", adminAuth, (req, res) => {
     const { id, title } = req.body;
 
-    if(id && !isNaN(id)){
-        Category.update({
-            title: title,
-            slug: slugify(title)
-        }, 
-        {
-            where: { id: id }
-        }).then(() => {
-            res.redirect("/admin/categories");
-        }).catch((msgError) => {
-            console.log("Failed to update category: " + msgError);
-            res.redirect("/categories/update");
-        });
-    }else{
-        console.log("Failed to update category: because id is not valid");
-        res.redirect("/categories/update");
-    }
+    Category.update({
+        title: title,
+        slug: slugify(title)
+    },
+    {
+        where: { id: id}
+    }).then(() => {
+        res.redirect("/admin/categories");
+    }).catch((msgError) => {
+        console.log("Failed to update category to database: " + msgError);
+        res.redirect("/admin/categories/edit/" + id);
+    });
 });
-
 module.exports = router;
